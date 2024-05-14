@@ -1,0 +1,36 @@
+/* trending-style.css */
+body{
+    background: linear-gradient(to bottom, rgba(0,0,0,0), rgb(8, 18, 59)), url('perspective-exterior-nobody-empty-box.jpg');
+}
+#trending {
+  margin-top: 40px;
+  margin-left: 30px;
+    
+    flex-wrap: wrap;
+    justify-content: center; /* Center the movie elements horizontally */
+    gap: 20px; /* Adjust the gap between movie elements as needed */
+    display: grid;
+    grid-template-columns: repeat(4, minmax(200px, 1fr));
+    grid-gap: 20px;
+    padding: 20px; /* Add some padding */
+   
+  }
+  
+  
+  .movie img {
+    width: 300px;
+    height: 400px;
+    border-radius: 5px;
+    border: 10px;
+    border-style: groove;
+    border-color: black;
+  
+   
+   
+  }
+  .movie p {
+
+    text-align: center;
+    
+  }
+ 

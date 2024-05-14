@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <title>Cinemunity</title>
+    <title>TV Series</title>
+    <style>
+        /* Add your CSS styles here */
+        body{
+            background: linear-gradient(to bottom, rgba(0,0,0,0), rgb(8, 18, 59)), url('perspective-exterior-nobody-empty-box.jpg');
+        }
+        .series {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.11);
+            /* Transparent white background */
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 0px;
+            height: 100%;
+            /* Ensure all movie items have the same height */
+        }
+        #seriesContainer {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(200px, 1fr));
+            grid-gap: 20px;
+            padding: 20px;
+            /* Add some padding */
+        }
+        .series img {
+            width: 300px;
+            height: 400px;
+            border-radius: 5px;
+            border: 10px;
+            border-style: groove;
+            border-color: black;}
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-container">
+             <div class="logo-container">
+                <a href="index.html"></a>
+                <h1 class="logo">Cinemunity</h1>
+             </a>
+             </div>
+             <div class="menu-container">
+                <ul class="menu-list">
+                    <li class="menu-list-item active"><a href="index.html">Home</a></li>
+                    <li class="menu-list-item"><a href="movies.html">Movies</a></li>
+                    <li class="menu-list-item"><a href="movies.html">Series</a></li>
+                    <li class="menu-list-item">Recommended</li>
+                    <li class="menu-list-item">People also watched</li>
+                    <li class="menu-list-item"><a href="trending.html">Trending</a></li>
+                </ul>
+             </div>
+             <div class="profile-container">
+                <img class="profile-pic" src="IMG2.jpeg" alt="sandesh">
+                <div class="profile-text-container">
+                    <span class="profile-text">Profile</span>
+                    <i class="fa-solid fa-caret-down"></i>
+                </div>
+                <div class="toggle">
+                    <i class="fa-solid fa-moon toggle-icon"></i>
+                    <i class="fa-solid fa-sun toggle-icon"></i>
+                    <div class="toggle-ball"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="sidebar">
+      <i class="left-menu-icon fa-solid fa-house"></i>
+      <i class="left-menu-icon fa-brands fa-searchengin"></i>
+      <i class="left-menu-icon fa-solid fa-users"></i>
+      <i class="left-menu-icon fa-solid fa-bookmark"></i>
+      <i class="left-menu-icon fa-solid fa-display"></i>
+      <i class="left-menu-icon fa-regular fa-hourglass-half"></i>
+      <i class="left-menu-icon fa-solid fa-cart-shopping"></i>
+    </div>
+    <div id="seriesContainer">
+        <!-- TV series details will be displayed here dynamically -->
+    </div>
+
+    <script>
+        // Your JavaScript code here
+        const options = {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+                Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhYWIwNDRhOGM4YTM5NWZmMjhiNzc3ZDJjMGY4OTBiMSIsInN1YiI6IjY2MzIyNzJhYzM5MjY2MDEyOTZkMGUwYiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.1I-t6H1Iy8BOUZ_14U-uC-QeZCsG0JOxB8l6axB2yXQ'
+            }
+        };
+
+        async function fetchAllSeries() {
+            const apiKey = "aab044a8c8a395ff28b777d2c0f890b1";
+            const baseUrl = "https://api.themoviedb.org/3";
+            const endpoint = "/tv/popular";
+            let page = 1;
+            const allSeries = [];
+            const maxPages = 10; // Set the maximum number of pages to fetch
+
+            while (page <= maxPages) {
+                const response = await fetch(`${baseUrl}${endpoint}?api_key=${apiKey}&language=en-US&page=${page}`, options);
+
+                if (!response.ok) {
+                    console.error(`Error fetching series from page ${page}: ${response.status}`);
+                    break;
+                }
+
+                const data = await response.json();
+
+                if (data.results) {
+                    allSeries.push(...data.results.map(series => ({
+                        title: series.name,
+                        posterUrl: `https://image.tmdb.org/t/p/w500${series.poster_path}`,
+                        id: series.id // Added series ID
+                    })));
+                    page++;
+                } else {
+                    break;
+                }
+            }
+
+            return allSeries;
+        }
+
+        async function fetchAndDisplayAllSeries() {
+            const series = await fetchAllSeries();
+            const seriesContainer = document.getElementById('seriesContainer');
+
+            for (const seriesItem of series) {
+                const seriesDiv = document.createElement('div');
+                seriesDiv.classList.add('series');
+
+                
+
+                const poster = document.createElement('img');
+                poster.src = seriesItem.posterUrl;
+                poster.alt = seriesItem.title;
+                seriesDiv.appendChild(poster);
+
+                const title = document.createElement('h2');
+                title.textContent = seriesItem.title;
+                seriesDiv.appendChild(title);
+
+                seriesContainer.appendChild(seriesDiv);
+            }
+        }
+
+        fetchAndDisplayAllSeries()
+            .catch(err => console.error(err));
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.min.js"></script>
+</body>
+</html>
