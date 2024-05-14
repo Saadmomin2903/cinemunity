@@ -27,8 +27,12 @@ function renderMovies() {
         const movieItem = document.createElement("div");
         movieItem.classList.add("movie-item");
 
+        // Create an anchor tag to open movie details in a new page
         const titleElement = document.createElement("h3");
+        const posterImg = document.createElement("img");
         titleElement.textContent = movie.title;
+        posterImg.src = movie.posterUrl;
+        posterImg.alt = movie.title;
 
         // Add event listener to title element to open a new page with movie title
         titleElement.addEventListener("click", () => {
@@ -36,6 +40,7 @@ function renderMovies() {
         });
 
         movieItem.appendChild(titleElement);
+        movieItem.appendChild(posterImg); // Append the poster image
 
         moviesListContainer.appendChild(movieItem);
     });
